@@ -161,4 +161,16 @@ class Evaluation
         }
         return null;
     }
+
+    public function moyenne(Collection $grades){
+        $num=0;
+        $denom= 0;
+        foreach ($grades as $grade){
+            $num+=$grade->getGrade();
+            $denom++;
+        }
+        return $num/$denom;
+    }
+
+
 }
