@@ -74,4 +74,15 @@ class Student extends User
         }
         return null;
     }
+
+    public function moyenneG(Collection $grades)
+    {
+        $num=0;
+        $denom= 0;
+        foreach ($grades as $grade){
+            $num+=$this->getGradeByEval ( $grade->getEvaluation->getId);
+            $denom+=$grade->getEvaluation->getBareme;
+        }
+        return $num/$denom;
+    }
 }
