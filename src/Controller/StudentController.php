@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\PreviousPasswords;
+use App\Entity\Professor;
 use App\Entity\Student;
 use App\Form\StudentType;
 use App\Repository\StudentRepository;
@@ -109,6 +110,17 @@ class StudentController extends AbstractController
         return $this->render('student/mygrades.html.twig', [
             'student' => $student,
             'grades' => $student->getGrades()
+
+        ]);
+    }
+
+    #[Route('/{id}/mesprofs', name: 'C', methods: ['GET'])]
+    public function mesProfs(Student $student, Professor $professor, EntityManagerInterface $entityManager): Response
+    {
+
+        return $this->render('student/mesprofs.html.twig', [
+            'student' => $student,
+            'profs' => $professor->getName()
 
         ]);
     }

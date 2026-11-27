@@ -172,5 +172,4 @@ class Evaluation
         return $num/$denom;
     }
 
-
 }
