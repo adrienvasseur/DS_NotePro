@@ -75,14 +75,29 @@ class Student extends User
         return null;
     }
 
-    public function moyenneG(Collection $grades)
+    /**
+     * Moyenne générale de l'étudiant, ramenée sur 20 en normalisant
+     * chaque note par le barème de son évaluation.
+     * Les notes absentes (élève absent) ou sans barème valide sont ignorées.
+     * Retourne null si l'étudiant n'a aucune note exploitable.
+     */
+    public function getMoyenneGenerale(): ?float
     {
-        $num=0;
-        $denom= 0;
-        foreach ($grades as $grade){
-            $num+=$this->getGradeByEval ( $grade->getEvaluation->getId);
-            $denom+=$grade->getEvaluation->getBareme;
+        $sum = 0;
+        $count = 0;
+
+        foreach ($this->grades as $grade) {
+            $value = $grade->getGrade();
+            $bareme = $grade->getEvaluation()?->getBareme();
+
+            if ($value === null || !$bareme) {
+                continue;
+            }
+
+            $sum += ((float) $value) / $bareme;
+            $count++;
         }
-        return $num/$denom;
+
+        return $count > 0 ? round(20 * $sum / $count, 2) : null;
     }
 }

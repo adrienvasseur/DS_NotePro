@@ -24,7 +24,7 @@
         </tbody>
     </table>
     <div>
-        <p><strong>Moyenne générale : </strong>student.moyenneG(student.grades)</p>
+        <p><strong>Moyenne générale : </strong>{{ student.moyenneGenerale is null ? '—' : student.moyenneGenerale ~ ' / 20' }}</p>
     </div>
 
 {% endblock %}

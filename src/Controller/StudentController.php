@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\PreviousPasswords;
-use App\Entity\Professor;
 use App\Entity\Student;
 use App\Form\StudentType;
 use App\Repository\StudentRepository;
@@ -13,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/etudiant')]
 class StudentController extends AbstractController
@@ -103,25 +103,36 @@ class StudentController extends AbstractController
         return $this->redirectToRoute('app_student_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/{id}/notes', name: 'app_student_notes', methods: ['GET', 'POST'])]
-    public function notes(Student $student, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}/notes', name: 'app_student_notes', methods: ['GET'])]
+    #[IsGranted('ROLE_STUDENT')]
+    public function notes(Student $student): Response
     {
+        // un étudiant ne peut consulter que ses propres notes
+        if ($student !== $this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
 
         return $this->render('student/mygrades.html.twig', [
             'student' => $student,
             'grades' => $student->getGrades()
-
         ]);
     }
 
-    #[Route('/{id}/mesprofs', name: 'C', methods: ['GET'])]
-    public function mesProfs(Student $student, Professor $professor, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}/mesprofs', name: 'app_student_mesprofs', methods: ['GET'])]
+    #[IsGranted('ROLE_STUDENT')]
+    public function mesProfs(Student $student): Response
     {
+        // un étudiant ne peut consulter que ses propres profs
+        if ($student !== $this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
+
+        // les profs de l'étudiant sont ceux qui interviennent dans sa classe
+        $profs = $student->getClassLevel()?->getProfessors() ?? [];
 
         return $this->render('student/mesprofs.html.twig', [
             'student' => $student,
-            'profs' => $professor->getName()
-
+            'profs' => $profs,
         ]);
     }
 }

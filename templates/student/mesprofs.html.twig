@@ -9,17 +9,18 @@
         <thead>
         <tr>
             <th scope="col">Prof</th>
+        </tr>
         </thead>
         <tbody>
-        {% for gr in professor.name %}
+        {% for prof in profs %}
             <tr>
-                <td>{{ gr.name }}</td>
+                <td>{{ prof.name }}</td>
             </tr>
+        {% else %}
+            <tr><td>Aucun professeur pour votre classe.</td></tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_student_notes') }}">back to grades</a>
-
-    {{ include('student/mygrades.html.twig') }}
+    <a href="{{ path('app_student_notes', {id: student.id}) }}">back to grades</a>
 {% endblock %}

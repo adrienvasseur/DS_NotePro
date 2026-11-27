@@ -41,7 +41,7 @@ class RegistrationFormType extends AbstractType
                         'message' => 'Saisissez un mot de passe',
                     ]),
                     new PasswordStrength(
-                        minScore: PasswordStrength::STRENGTH_WEAK, // Very strong password required
+                        minScore: PasswordStrength::STRENGTH_WEAK, // score 1 = entropie >= 60 bits
                     ),
                 ],
             ])
